@@ -188,3 +188,25 @@ Throughout the cleaning process, we will check for duplicates, inconsistent iden
 We will also check if the proportion of identifiable food products are different across income groups (richer or poorer households). 
 
 Finally, the environmental coefficients represent average emissions for broader food categories. Our results will be interpreted as an estimate of emissions in households, rather than a precise measurement of households' total food-related GHG emissions.
+
+# 5 Description of the research question 
+
+Our research question is: 
+
+Is household income associated with the environmental impact of food consumption in the United States?
+
+Food consumption contributes significantly to greenhouse gas emissions, and the environmental impact of individuals varies depending on the types and quantities of food that they consume. For example, animal-based products, particularly beef, have higher greenhouse gas emissions per kilogram than many plant-based foods. Thus, analyzing food consumption is important when considering the environmental impact of households or aggregates.
+
+Our project aims to investigate if households’ income is associated with the environmental impact of food consumption in the United States. More specifically, we want to understand whether richer households consume food products that emit greater greenhouse gas than poorer households.
+
+Economically, income is important in consumption choices. Households with higher incomes generally have fewer budget constraints and are able to purchase larger quantities of food, more expensive products, or foods with different environmental impacts. For instance, they might consume more meat and dairy products, which often emit relatively high levels of greenhouse gas emissions. However, higher income could also be associated with greater access to information about climate change and the ability to choose alternative foods that are less environment-damaging. Consequently, the relationship between household income and the environmental impact of food consumption is not easy to understand.
+
+We will look at two main hypotheses:
+
+First, we expect that richer households may be associated with greater food-related greenhouse gas emissions because of a higher purchasing power and access to higher-emitting food products.
+Second, we hypothesize that this relationship may become weaker when taking into account the household size, since larger households consume more food than smaller ones.
+
+To investigate these hypotheses, we use datasets from the USDA's FoodAPS survey  and the environmental impact estimates from Poore and Nemecek (2018). FoodAPS provides information on household characteristics and food acquisitions, and the environmental dataset gives us information about the average GHG emissions of different food categories. 
+
+This project aims to better understand how socioeconomic differences can impact the environmental footprint of households. Although our analysis will not establish a causal relationship, it may help identify patterns and characteristics that could be useful  to understand better sustainable food consumption and give an idea on how environmental policies could be better adapted to the income of households.
+
