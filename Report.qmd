@@ -131,6 +131,27 @@ file_info(
   quantities,
   name   = "Food at home quantities dataset",
   source = "APS",
-  file   = "data_raw/foodaps_fah_quantities.csv"
-)
+  file   = "data_raw/foodaps_fah_quantities.csv")
+
 ```
+
+## 3.2 Key variables
+
+| Data | Variable | Interpretation and use |
+|------------------------|------------------------|------------------------|
+| Household | `hhnum` | Household identifier; primary household join key |
+| Household | `inchhavg_r` | Average **monthly** household income, in USD; top-coded/imputed measure |
+| Household | `hhsize` | Household size, used for an illustrative per-person denominator |
+| Household | `region` | Region variable for descriptive comparison |
+| Household | `hhwgt` | USDA household survey weight; not used automatically in basic figures |
+| FAH items | `eventid` | Unique acquisition event identifier |
+| FAH items | `itemnum` | Sequential item number within event; **not a product code** |
+| FAH items | `itemdesc` | Food description where available |
+| FAH items | `barcode` | Barcode potentially usable to recover a repeated description |
+| Quantities | `hei_grams` | Item quantity, in grams |
+| Quantities | `imp_gram_flag` | Supplementary quantity-imputation indicator; interpret with USDA codebook |
+| OWID | `entity` | Food category |
+| OWID | `ghg_emissions_per_kilogram__poore__and__nemecek__2018` | kg CO2e per kg of product |
+
+
+
