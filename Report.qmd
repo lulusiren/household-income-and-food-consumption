@@ -1,15 +1,78 @@
 ---
-title: "Report_2nd_phase"
+title: "Household income and the greenhouse gas footprint of food acquisitions in the Unites States"
+subtitle: "Data Management Project phase 2"
+author: "Faustine Rosset and Lucie Ren"
 format: html
 editor: visual
 message: FALSE
 ---
 
-## project link
+# Project Link
 
 Here is the link to the GitHub:
 
 <https://github.com/lulusiren/household-income-and-food-consumption.git>
+
+# 1. Introduction
+
+We know that food choices have environmental consequences, as different products generate different levels of greenhouse gas (GHG) emissions. Household food-related emissions may vary according to income, household size and purchasing habits.
+
+This project investigates whether household income is associated with the estimated GHG emissions of food-at-home acquisitions in the United States. It combines household and food-item data from the USDA's Food Acquisition and Purchase Survey (FoodAPS), conducted between April 2012 and January 2013, with emissions factors from Our World in Data, based on Poore and Nemecek (2018).
+
+Since household income is measured monthly while food acquisitions cover approximately one week, the analysis does not measure actual food consumption or waste. Moreover, because some food items cannot be identified or matched to emissions factors, the main outcome includes only classified food items. The project also examines matching coverage to acknowledge these limitations.
+
+# 2. Data sources
+
+## 2.1 FoodAPS houselhold data
+
+**File:** `faps_household_puf.csv`\
+**Provider:** USDA Economic Research Service (ERS)\
+**Download:** <https://www.ers.usda.gov/data-products/foodaps-national-household-food-acquisition-and-purchase-survey/data-access>\
+**Codebook:** <https://www.ers.usda.gov/sites/default/files/images/1_household-codebook-puf.pdf>
+
+This public-use dataset contains one record for each of the 4,826 surveyed households in the USDA FoodAPS survey. It includes demographic, economic, and household characteristics, as well as information on food assistance and purchasing habits. The household identifier (`hhnum`) is used to link household data with food-item records. The main explanatory variable is `inchhavg_r`, which measures average monthly household income based on imputed member incomes and is top-coded. Other relevant variables include `hhsize` (household size), `region` (geographic location), and `hhwgt` (survey weight). Household size is particularly important because larger households may acquire more food. It is also used to calculate per-person emissions. However, these estimates reflect food acquisitions rather than actual consumption. Since the data are cross-sectional, the analysis identifies associations rather than causal effects.
+
+# 2.2 FoodAPS food-at-home item data
+
+**File:** `faps_fahitem_puf.csv`\
+**Provider:** USDA ERS\
+**Download:** <https://www.ers.usda.gov/data-products/foodaps-national-household-food-acquisition-and-purchase-survey/data-access>\
+**Codebook:** <https://www.ers.usda.gov/sites/default/files/images/4_fah-items-codebook-puf.pdf>
+
+The food-at-home (FAH) item file contains 143,050 records of food acquisitions from 4,367 households. Each record represents an item acquired for home use. The main identifiers are `hhnum` (household), `eventid` (acquisition event), and `itemnum` (item sequence within an event). Importantly, `itemnum` is not a unique product identifier. The variable `itemdesc` provides food descriptions, while `barcode` can identify repeated products. These descriptions are essential for matching food items to emissions categories. However, approximately three-fifths of records in the uploaded dataset have missing descriptions, limiting classification coverage. Since the file includes both packaged and unpackaged foods, we preserve the original data and create a separate classification variable. Missing descriptions are treated as unidentified items rather than products with zero emissions.
+
+# 2.3 FoodAPS imputed quantities
+
+**File:** `foodaps_fah_quantities.csv`\
+**Provider:** USDA ERS, FoodAPS imputed quantities supplement\
+**Source:** <https://www.ers.usda.gov/data-products/foodaps-national-household-food-acquisition-and-purchase-survey/data-access> This dataset is a CSV conversion of the FoodAPS supplementary imputed quantities file. At first, it was a .dta file that we changed into a .cvs file using this code:
+
+```{r}
+library(haven)
+library(readr)
+library(dplyr)
+quantities <- read_dta("data_raw/faps_eiq_fahitem_puf.dta")
+glimpse(quantities)
+readr::write_csv(quantities,
+  "data_raw/foodaps_fah_quantities.csv")
+```
+
+It contains 143,050 records and includes the identifiers `hhnum`, `eventid` and `itemnum`, `hei_grams` and `imp_gram_flag`. These identifiers allow quantities to be matched to the corresponding food-item records. The variable `hei_grams` measures food quantities in grams and provides the physical weight needed to estimate emissions. Although every record contains a quantity, some values may be imputed rather than directly measured. It is important when interpreting the data. Quantities are converted from grams to kilograms to match the units of the emissions dataset. Expenditure is not used as a substitute for quantity, since spending and physical weight measure different things.
+
+# 2.4 Environmental impact data
+
+**File:** `ghg-per-kg-poore.csv`\
+**Provider:** Our World in Data (OWID), based on Poore and Nemecek (2018)\
+**Source and download:** <https://ourworldindata.org/grapher/ghg-per-kg-poore>\
+**Original study:** <https://doi.org/10.1126/science.aaq0216>
+
+It assesses the environmental impacts of food products (Poore and Nemecek (2018)). This dataset gives estimates of the environmental impact of different food products. The emissions variable measures global average greenhouse gas emissions in kilograms of CO₂ equivalent (kg CO₂e) per kilogram of food product, based on Poore and Nemecek (2018). We are particularly interested in greenhouse gas emissions (GHG), measured in kg of CO₂-equivalent per kg of food. It includes products such as beef, chicken, milk, cheese, rice and different fruits and vegetables. All observations refer to 2010, which is the emissions data year, not the FoodAPS purchase period.
+
+This dataset contains 3 rows. The two most important ones are: a variable called `entity` that describes 38 different types of food through chains of characters. The second variable is called `ghg_emissions_per_kilogram__poore__and__nemecek__2018 (ascending)`. It is a numerical variable that accounts for the amount of GHG emissions measured in kg of CO₂-equivalent per kg of food. Since the two datasets have no common identifier, food items are matched to emissions categories using an approximate classification of their descriptions. Uncertain or mixed products are left unmatched. Therefore, the analysis provides an exploratory estimate of emissions for identifiable food acquisitions rather than a complete measure of household food-related emissions.
+
+# 3. Data descriptions
+
+## 3.1 tables with number of observations and variables
 
 Now, we import the datasets and create the summary tables:
 
