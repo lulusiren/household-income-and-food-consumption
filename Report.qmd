@@ -5,4 +5,69 @@ editor: visual
 message: FALSE
 ---
 
-## 
+## project link
+
+Here is the link to the GitHub:
+
+<https://github.com/lulusiren/household-income-and-food-consumption.git>
+
+Now, we import the datasets and create the summary tables:
+
+```{r}
+here::i_am("household income and food consumption.Rproj")
+
+library(tidyverse)
+library(knitr)
+
+ghg <- read_csv("data_raw/ghg-per-kg-poore.csv")
+food_item <- read_csv("data_raw/faps_fahitem_puf.csv")
+household <- read_csv("data_raw/faps_household_puf.csv")
+quantities <- read_csv("data_raw/foodaps_fah_quantities.csv")
+
+#| label: table-ghg
+
+file_info <- function(df, name, source, file) {
+  tibble(
+    Item = c("Name", "Source", "File",
+             "Number of rows", "Number of columns",
+             "Column names", "Missing values (total)"),
+    Value = c(name, source, file,
+              nrow(df), ncol(df),
+              paste(names(df), collapse = ", "),
+              sum(is.na(df)))) |>
+    kable(caption = paste("Basic information about the dataset on:", name)) }
+
+file_info(
+  ghg,
+  name   = "GHG emissions per kilogram of food",
+  source = "Poore & Nemecek (2018)",
+  file   = "data/ghg-per-kg-poore.csv"
+)
+
+#| label: table-aps-food_item
+
+file_info(
+  food_item,
+  name   = "Food at home item dataset",
+  source = "APS",
+  file   = "data_raw/faps_fahitem_puf.csv"
+)
+
+#| label: table-aps-household
+
+file_info(
+  household,
+  name   = "Household dataset",
+  source = "APS",
+  file   = "data_raw/faps_household_puf.csv"
+)
+
+#| label: table-aps-quantities
+
+file_info(
+  quantities,
+  name   = "Food at home quantities dataset",
+  source = "APS",
+  file   = "data_raw/foodaps_fah_quantities.csv"
+)
+```
