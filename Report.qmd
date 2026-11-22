@@ -153,5 +153,23 @@ file_info(
 | OWID | `entity` | Food category |
 | OWID | `ghg_emissions_per_kilogram__poore__and__nemecek__2018` | kg CO2e per kg of product |
 
+# 4. Data preparation and cleaning
 
+## 4.1 Merging the datasets
+
+First, we will combine the three FoodAPS datasets. 
+The household dataset has information about household income (`inchhavg_r`) and household size (`hhsize`). The food-at-home item dataset provides information about the food products acquired while the imputed quantities dataset has their estimated quantities in grams (`hei_grams`).
+
+The food-item and quantity datasets can be merged using three common identifiers: `hhnum`, `eventid`, and `itemnum`. After that, we will link the resulting dataset to the household information using hhnum, which identifies each single household.
+
+Then, we will merge the FoodAPS data with the environmental dataset from Poore and Nemecek (2018). But, since the two sources do not share a common product identifier, **we will need to match food products to broader food categories, such as beef, poultry, dairy products and vegetables.**
+
+## 4.2 Missing values
+
+One of the main difficulties here is the large share of missing food descriptions (`itemdesc`). In our dataset, more than half of food-item observations have no description, making it difficult to identify their environmental impact.
+
+To solve this problem, we were thinking of this approach: 
+**We could examine whether missing descriptions can be recovered using product barcodes.**
+When a barcode is associated with the same identifiable product elsewhere in the dataset, it may be possible to recover its description. 
+For observations that would still be unidentified, we will avoid assigning food categories. Instead, we will try to distinguish between foods that can be classified and those that cannot, and see how excluding unidentified foods might affect our results.
 
