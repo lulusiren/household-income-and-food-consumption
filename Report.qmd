@@ -15,11 +15,11 @@ Here is the link to the GitHub:
 
 # 1. Introduction
 
-We know that food choices have environmental consequences, as different products generate different levels of greenhouse gas (GHG) emissions. Household food-related emissions may vary according to income, household size and purchasing habits.
+We know that **food choices have environmental consequences**, as different products generate different levels of greenhouse gas (GHG) emissions. We were thinking that household food-related emissions may vary according to income, household size and purchasing habits.
 
-This project investigates whether household income is associated with the estimated GHG emissions of food-at-home acquisitions in the United States. It combines household and food-item data from the USDA's Food Acquisition and Purchase Survey (FoodAPS), conducted between April 2012 and January 2013, with emissions factors from Our World in Data, based on Poore and Nemecek (2018).
+This project looks at **whether household income is associated to the greenhouse gas emissions procuded by the food households buy in the United States.** 
 
-Since household income is measured monthly while food acquisitions cover approximately one week, the analysis does not measure actual food consumption or waste. Moreover, because some food items cannot be identified or matched to emissions factors, the main outcome includes only classified food items. The project also examines matching coverage to acknowledge these limitations.
+Since household income is measured monthly while buying foods cover approximately one week, the analysis does not measure actual food consumption or waste. Moreover, because some food items cannot be identified or matched to emissions factors, **the main outcome includes only classified food items.**
 
 # 2. Data sources
 
@@ -30,7 +30,12 @@ Since household income is measured monthly while food acquisitions cover approxi
 **Download:** <https://www.ers.usda.gov/data-products/foodaps-national-household-food-acquisition-and-purchase-survey/data-access>\
 **Codebook:** <https://www.ers.usda.gov/sites/default/files/images/1_household-codebook-puf.pdf>
 
-This public-use dataset contains one record for each of the 4,826 surveyed households in the USDA FoodAPS survey. It includes demographic, economic, and household characteristics, as well as information on food assistance and purchasing habits. The household identifier (`hhnum`) is used to link household data with food-item records. The main explanatory variable is `inchhavg_r`, which measures average monthly household income based on imputed member incomes and is top-coded. Other relevant variables include `hhsize` (household size), `region` (geographic location), and `hhwgt` (survey weight). Household size is particularly important because larger households may acquire more food. It is also used to calculate per-person emissions. However, these estimates reflect food acquisitions rather than actual consumption. Since the data are cross-sectional, the analysis identifies associations rather than causal effects.
+**This public-use dataset contains one record for each of the 4,826 surveyed households in the USDA FoodAPS survey.** 
+It includes demographic, economic, and household characteristics, as well as information on food assistance and purchasing habits. 
+The household identifier (`hhnum`) is used to link household data with food-item records. The main variable is `inchhavg_r`, which measures average monthly household income based on estimated incomes for household members.
+Other relevant variables include `hhsize` (household size), `region` (geographic location), and `hhwgt` (survey weight). 
+Household size is particularly important because larger households may buy more food. It is also used to calculate per-person emissions. 
+However, these estimates reflect food acquisitions rather than actual consumption. So, the analysis identifies associations rather than causal effects.
 
 # 2.2 FoodAPS food-at-home item data
 
@@ -39,7 +44,13 @@ This public-use dataset contains one record for each of the 4,826 surveyed house
 **Download:** <https://www.ers.usda.gov/data-products/foodaps-national-household-food-acquisition-and-purchase-survey/data-access>\
 **Codebook:** <https://www.ers.usda.gov/sites/default/files/images/4_fah-items-codebook-puf.pdf>
 
-The food-at-home (FAH) item file contains 143,050 records of food acquisitions from 4,367 households. Each record represents an item acquired for home use. The main identifiers are `hhnum` (household), `eventid` (acquisition event), and `itemnum` (item sequence within an event). Importantly, `itemnum` is not a unique product identifier. The variable `itemdesc` provides food descriptions, while `barcode` can identify repeated products. These descriptions are essential for matching food items to emissions categories. However, approximately three-fifths of records in the uploaded dataset have missing descriptions, limiting classification coverage. Since the file includes both packaged and unpackaged foods, we preserve the original data and create a separate classification variable. Missing descriptions are treated as unidentified items rather than products with zero emissions.
+The food-at-home (FAH) item file contains 143,050 records of food acquisitions from 4,367 households. Each record represents an item bought for home use. The main identifiers are `hhnum` (household), `eventid` (acquisition event), and `itemnum` (item sequence within an event). 
+**More importantly, `itemnum` is not a unique product identifier.**
+The variable `itemdesc` provides food descriptions, while `barcode` can identify repeated food products. 
+These descriptions are **essential for matching food items to emissions categories.**
+However, more than half of the records in the uploaded dataset have missing descriptions, making it harder to classify all food products. 
+Since the file includes both packaged and unpackaged foods, we keep the original data and create a separate classification variable. 
+Plus, missing descriptions are treated as unidentified items rather than products with zero emissions.
 
 # 2.3 FoodAPS imputed quantities
 
@@ -57,7 +68,12 @@ readr::write_csv(quantities,
   "data_raw/foodaps_fah_quantities.csv")
 ```
 
-It contains 143,050 records and includes the identifiers `hhnum`, `eventid` and `itemnum`, `hei_grams` and `imp_gram_flag`. These identifiers allow quantities to be matched to the corresponding food-item records. The variable `hei_grams` measures food quantities in grams and provides the physical weight needed to estimate emissions. Although every record contains a quantity, some values may be imputed rather than directly measured. It is important when interpreting the data. Quantities are converted from grams to kilograms to match the units of the emissions dataset. Expenditure is not used as a substitute for quantity, since spending and physical weight measure different things.
+It contains 143,050 records and includes the identifiers `hhnum`, `eventid` and `itemnum`, `hei_grams` and `imp_gram_flag`. 
+**These identifiers allow quantities to be matched to the corresponding food-item records.**
+The variable `hei_grams` measures food quantities in grams and provides the physical weight needed to estimate emissions. 
+Although every record has a quantity, some values may be imputed rather than directly measured. It is important when interpreting the data. 
+**Quantities are converted from grams to kilograms to match the units of the emissions dataset.**
+Expenditure is not used as a substitute for quantity, since spending and physical weight measure different things.
 
 # 2.4 Environmental impact data
 
@@ -66,9 +82,14 @@ It contains 143,050 records and includes the identifiers `hhnum`, `eventid` and 
 **Source and download:** <https://ourworldindata.org/grapher/ghg-per-kg-poore>\
 **Original study:** <https://doi.org/10.1126/science.aaq0216>
 
-It assesses the environmental impacts of food products (Poore and Nemecek (2018)). This dataset gives estimates of the environmental impact of different food products. The emissions variable measures global average greenhouse gas emissions in kilograms of CO₂ equivalent (kg CO₂e) per kilogram of food product, based on Poore and Nemecek (2018). We are particularly interested in greenhouse gas emissions (GHG), measured in kg of CO₂-equivalent per kg of food. It includes products such as beef, chicken, milk, cheese, rice and different fruits and vegetables. All observations refer to 2010, which is the emissions data year, not the FoodAPS purchase period.
+It assesses the environmental impacts of food products (Poore and Nemecek (2018)). **This dataset gives estimates of the environmental impact of different food products.**
+The emissions variable measures global average greenhouse gas emissions in kilograms of CO₂ equivalent (kg CO₂e) per kilogram of food product, based on Poore and Nemecek (2018). 
+We are particularly interested in greenhouse gas emissions (GHG), measured in kg of CO₂-equivalent per kg of food. It includes products such as beef, chicken, milk, cheese, rice and different fruits and vegetables. All observations refer to 2010, which is the emissions data year, not the FoodAPS purchase period.
 
-This dataset contains 3 rows. The two most important ones are: a variable called `entity` that describes 38 different types of food through chains of characters. The second variable is called `ghg_emissions_per_kilogram__poore__and__nemecek__2018 (ascending)`. It is a numerical variable that accounts for the amount of GHG emissions measured in kg of CO₂-equivalent per kg of food. Since the two datasets have no common identifier, food items are matched to emissions categories using an approximate classification of their descriptions. Uncertain or mixed products are left unmatched. Therefore, the analysis provides an exploratory estimate of emissions for identifiable food acquisitions rather than a complete measure of household food-related emissions.
+This dataset contains 3 rows. 
+**The two most important ones are: a variable called `entity` that describes 38 different types of food through chains of characters. The second variable is called `ghg_emissions_per_kilogram__poore__and__nemecek__2018 (ascending)`.**
+It is a numerical variable that accounts for the amount of GHG emissions measured in kg of CO₂-equivalent per kg of food. Since the two datasets have no common identifier, food items are matched to emissions categories using an approximate classification of their descriptions. **Uncertain or mixed products are left unmatched.**
+Therefore, the analysis estimates emissions only for identifiable food items rather than a complete measure of household food-related emissions.
 
 # 3. Data descriptions
 
@@ -140,12 +161,12 @@ file_info(
 | Data | Variable | Interpretation and use |
 |------------------------|------------------------|------------------------|
 | Household | `hhnum` | Household identifier; primary household join key |
-| Household | `inchhavg_r` | Average **monthly** household income, in USD; top-coded/imputed measure |
+| Household | `inchhavg_r` | Average monthly household income, in USD; top-coded/imputed measure |
 | Household | `hhsize` | Household size, used for an illustrative per-person denominator |
 | Household | `region` | Region variable for descriptive comparison |
 | Household | `hhwgt` | USDA household survey weight; not used automatically in basic figures |
 | FAH items | `eventid` | Unique acquisition event identifier |
-| FAH items | `itemnum` | Sequential item number within event; **not a product code** |
+| FAH items | `itemnum` | Sequential item number within event |
 | FAH items | `itemdesc` | Food description where available |
 | FAH items | `barcode` | Barcode potentially usable to recover a repeated description |
 | Quantities | `hei_grams` | Item quantity, in grams |
@@ -157,56 +178,55 @@ file_info(
 
 ## 4.1 Merging the datasets
 
-First, we will combine the three FoodAPS datasets. 
-The household dataset has information about household income (`inchhavg_r`) and household size (`hhsize`). The food-at-home item dataset provides information about the food products acquired while the imputed quantities dataset has their estimated quantities in grams (`hei_grams`).
+**First, we will combine the three FoodAPS datasets.** 
+The household dataset has information about household income (`inchhavg_r`) and household size (`hhsize`). The food-at-home item dataset provides information about which food items the different households bought while the quantities dataset has their estimated quantities in grams (`hei_grams`).
 
-The food-item and quantity datasets can be merged using three common identifiers: `hhnum`, `eventid`, and `itemnum`. After that, we will link the resulting dataset to the household information using hhnum, which identifies each single household.
+The food-item and quantity datasets can be merged using **three common identifiers**: `hhnum`, `eventid`, and `itemnum`.
+After that, we will link the resulting dataset to the household information using hhnum, which identifies each single household.
 
 Then, we will merge the FoodAPS data with the environmental dataset from Poore and Nemecek (2018). But, since the two sources do not share a common product identifier, **we will need to match food products to broader food categories, such as beef, poultry, dairy products and vegetables.**
 
 ## 4.2 Missing values
 
-One of the main difficulties here is the large share of missing food descriptions (`itemdesc`). In our dataset, more than half of food-item observations have no description, making it difficult to identify their environmental impact.
+**One of the main difficulties here is the large share of missing food descriptions (`itemdesc`).** Like we said before, in our dataset, more than half of food-item observations have no description, making it difficult to identify their environmental impact.
 
 To solve this problem, we were thinking of this approach: 
-**We could examine whether missing descriptions can be recovered using product barcodes.**
-When a barcode is associated with the same identifiable product elsewhere in the dataset, it may be possible to recover its description. 
-For observations that would still be unidentified, we will avoid assigning food categories. Instead, we will try to distinguish between foods that can be classified and those that cannot, and see how excluding unidentified foods might affect our results.
+**We could examine whether missing descriptions can be recovered using product barcodes.** When a barcode is associated with the same identifiable food product elsewhere in the dataset, it may be possible to recover its description. 
+
+For observations that would still be unidentified, **we will avoid assigning food categories.**
+Instead, we will try to distinguish between foods that can be classified and those that cannot, and see how excluding unidentified foods might affect our results.
 
 ## 4.3 Food classification and environmental impact
 
-After the cleaning of the food descriptions, we will *match the identifiable foods into the categories of the environmental dataset*.
-For example, if we have multiple foods like beef steak or ground beef we will put it into the beef category. For what concerns mixed products, it will require additional verification to be able to classify them.
+After the cleaning of the food descriptions, we will **match the identifiable foods into the categories of the environmental dataset**. For example, if we have multiple foods like beef steak or ground beef we will put it into the beef category. For what concerns mixed products, it will require additional verification to be able to classify them.
 
-When everything is classified, we will then *estimate greenhouse gas emissions (GHG)*  by multiplying the quantity of each food product (that we will convert into kilograms) by its corresponding emissions factor (expressed in kg CO₂-equivalent per kg of food).
+When everything is classified, we will then **estimate greenhouse gas emissions (GHG)** by multiplying the quantity of each food product (that we will convert into kilograms) by its corresponding emissions factor (expressed in kg CO₂-equivalent per kg of food).
 
-*These estimated emissions will be aggregated at the household level*, for us to examine their relationship with households’ income. We may also calculate emissions per household member to account for differences in household size.
+**These estimated emissions will be aggregated at the household level**, for us to examine their relationship with households’ income. We may also calculate emissions per household member to account for differences in household size.
 
 ## 4.4 Data quality and limitations
 
-Throughout the cleaning process, we will check for duplicates, inconsistent identifiers, missing values, and non-plausible quantities.
-We will also check if the proportion of identifiable food products are different across income groups (richer or poorer households). 
+Throughout the cleaning process, **we will check for duplicates, inconsistent identifiers, missing values, and non-plausible quantities.**
+We will also check if the proportion of identifiable food products are different across income groups (richer or poorer households).
 
-Finally, the environmental coefficients represent average emissions for broader food categories. Our results will be interpreted as an estimate of emissions in households, rather than a precise measurement of households' total food-related GHG emissions.
+Finally, the environmental coefficients represent average emissions for broader food categories. **Our results will be interpreted as an estimate of emissions in households, rather than a precise measurement of households' total food-related GHG emissions.**
 
-# 5 Description of the research question 
+# 5 Description of the research question
 
-Our research question is: 
+Our research question is:
 
-Is household income associated with the environmental impact of food consumption in the United States?
+*Is household income associated with the environmental impact of food consumption in the United States?*
 
-Food consumption contributes significantly to greenhouse gas emissions, and the environmental impact of individuals varies depending on the types and quantities of food that they consume. For example, animal-based products, particularly beef, have higher greenhouse gas emissions per kilogram than many plant-based foods. Thus, analyzing food consumption is important when considering the environmental impact of households or aggregates.
+Food consumption contributes significantly to greenhouse gas emissions, and the environmental impact of individuals varies depending on the types and quantities of food that they consume. For example, animal-based products, particularly beef, have higher greenhouse gas emissions per kilogram than many plant-based foods. **Thus, analyzing food consumption is important when considering the environmental impact of households or aggregates.**
 
-Our project aims to investigate if households’ income is associated with the environmental impact of food consumption in the United States. More specifically, we want to understand whether richer households consume food products that emit greater greenhouse gas than poorer households.
+**Our project aims to investigate if households’ income is associated with the environmental impact of food consumption in the United States.** More specifically, we want to understand whether richer households consume food products that emit greater greenhouse gas than poorer households.
 
-Economically, income is important in consumption choices. Households with higher incomes generally have fewer budget constraints and are able to purchase larger quantities of food, more expensive products, or foods with different environmental impacts. For instance, they might consume more meat and dairy products, which often emit relatively high levels of greenhouse gas emissions. However, higher income could also be associated with greater access to information about climate change and the ability to choose alternative foods that are less environment-damaging. Consequently, the relationship between household income and the environmental impact of food consumption is not easy to understand.
+Economically, income is important in consumption choices. Households with higher incomes generally have fewer budget constraints and are able to purchase larger quantities of food, more expensive products, or foods with different environmental impacts. For instance, they might consume more meat and dairy products, which often emit relatively higher levels of greenhouse gas emissions. However, higher income could also be associated with greater access to information about climate change and the ability to choose alternative foods that are less environment-damaging. Consequently, the relationship between household income and the environmental impact of food consumption is not easy to understand.
 
-We will look at two main hypotheses:
+We will look at **two main hypotheses**:
 
-First, we expect that richer households may be associated with greater food-related greenhouse gas emissions because of a higher purchasing power and access to higher-emitting food products.
-Second, we hypothesize that this relationship may become weaker when taking into account the household size, since larger households consume more food than smaller ones.
+First, we expect that richer households may be associated with greater food-related greenhouse gas emissions because of a higher purchasing power and access to higher-emitting food products. Second, we hypothesize that this relationship may become weaker when taking into account the household size, since larger households consume more food than smaller ones.
 
-To investigate these hypotheses, we use datasets from the USDA's FoodAPS survey  and the environmental impact estimates from Poore and Nemecek (2018). FoodAPS provides information on household characteristics and food acquisitions, and the environmental dataset gives us information about the average GHG emissions of different food categories. 
+To investigate these hypotheses, we use datasets from the USDA's FoodAPS survey and the environmental impact estimates from Poore and Nemecek (2018). FoodAPS provides information on household characteristics and food acquisitions, and the environmental dataset gives us information about the average GHG emissions of different food categories.
 
-This project aims to better understand how socioeconomic differences can impact the environmental footprint of households. Although our analysis will not establish a causal relationship, it may help identify patterns and characteristics that could be useful  to understand better sustainable food consumption and give an idea on how environmental policies could be better adapted to the income of households.
-
+**This project aims to better understand how socioeconomic differences can impact the environmental footprint of households.** Although our analysis will not establish a causal relationship, it may help identify patterns and characteristics that could be useful to understand better sustainable food consumption and give an idea on how environmental policies could be better adapted to the income of households.
