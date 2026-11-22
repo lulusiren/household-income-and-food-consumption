@@ -173,3 +173,18 @@ To solve this problem, we were thinking of this approach:
 When a barcode is associated with the same identifiable product elsewhere in the dataset, it may be possible to recover its description. 
 For observations that would still be unidentified, we will avoid assigning food categories. Instead, we will try to distinguish between foods that can be classified and those that cannot, and see how excluding unidentified foods might affect our results.
 
+## 4.3 Food classification and environmental impact
+
+After the cleaning of the food descriptions, we will *match the identifiable foods into the categories of the environmental dataset*.
+For example, if we have multiple foods like beef steak or ground beef we will put it into the beef category. For what concerns mixed products, it will require additional verification to be able to classify them.
+
+When everything is classified, we will then *estimate greenhouse gas emissions (GHG)*  by multiplying the quantity of each food product (that we will convert into kilograms) by its corresponding emissions factor (expressed in kg CO₂-equivalent per kg of food).
+
+*These estimated emissions will be aggregated at the household level*, for us to examine their relationship with households’ income. We may also calculate emissions per household member to account for differences in household size.
+
+## 4.4 Data quality and limitations
+
+Throughout the cleaning process, we will check for duplicates, inconsistent identifiers, missing values, and non-plausible quantities.
+We will also check if the proportion of identifiable food products are different across income groups (richer or poorer households). 
+
+Finally, the environmental coefficients represent average emissions for broader food categories. Our results will be interpreted as an estimate of emissions in households, rather than a precise measurement of households' total food-related GHG emissions.
